@@ -30,7 +30,7 @@ spec:
     container:
       image: alpine:latest
       command: [sh, -c]
-      args: ["echo accessed at: $(date) | tee -a /mnt/vol/accesslog"]
+      args: ["echo accessed at: $(date) | tee -a /mnt/export/accesslog"]
       volumeMounts:
       - name: workdir
         mountPath: /mnt/export
@@ -39,7 +39,7 @@ spec:
     container:
       image: alpine:latest
       command: [sh, -c]
-      args: ["echo 'Volume access log:'; cat /mnt/vol/accesslog"]
+      args: ["echo 'Volume access log:'; cat /mnt/export/accesslog"]
       volumeMounts:
       - name: workdir
         mountPath: /mnt/export
