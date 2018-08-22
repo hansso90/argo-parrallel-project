@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: dynamic-input-workflow-
+  namespace: parrallel-coin-flipper
+spec:
+  entrypoint: dynamic-input-workflow
+  arguments:
+    parameters:
+    - name: seq-list
+      value: |
+        [a,b,c,d]
+  templates:
+  - name: dynamic-input-workflow
+    parallelism: 2
+    arguments:
+      parameters:
+      - name: seq-list
+    steps:
+    - - name: sleep
+        template: sleep
+        withParam: "{{inputs.parameters.seq-list}}"
+
+  - name: sleep
+    container:
+      image: alpine:latest
+      command: [sh, -c, sleep 10]
