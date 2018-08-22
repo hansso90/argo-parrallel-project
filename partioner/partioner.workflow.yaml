@@ -13,7 +13,7 @@ spec:
   templates:
   - name: dynamic-input-workflow
     parallelism: 2
-    arguments:
+    inputs:
       parameters:
       - name: seq-list
     steps:
