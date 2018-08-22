@@ -1,27 +1,91 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
-  generateName: dynamic-input-workflow-
-  namespace: parrallel-coin-flipper
+  generateName: dynamic-partioner-workflow-
 spec:
-  entrypoint: dynamic-input-workflow
+  entrypoint: dynamic-partioner-workflow
   arguments:
     parameters:
-    - name: seq-list
+    - name: partitioner-output
       value: |
-        ["a","b","c","d"]
+        ["a","b","c","d", "e", "f", "g"]
   templates:
-  - name: dynamic-input-workflow
-    parallelism: 2
+  - name: dynamic-partioner-workflow
     inputs:
       parameters:
-      - name: seq-list
+      - name: partitioner-output
     steps:
-    - - name: sleep
-        template: sleep
-        withParam: "{{inputs.parameters.seq-list}}"
+    - - name: running-stack
+        template: running-stack
+        arguments:
+          parameters:
+          - name: id
+            value: "{{item}}"
+        withParam: "{{inputs.parameters.partitioner-output}}"
+    - - name: step4
+        template: step4
+    - - name: step5
+        template: step5
+    - - name: step6
+        template: step6
 
-  - name: sleep
+  - name: running-stack
+    template: running-stack
+    parallelism: 20
+    inputs:
+      parameters:
+      - name: id
+    steps:
+    - - name: step1
+        template: step1
+        arguments:
+          parameters:
+          - name: id
+            value: "{{inputs.parameters.id}}"
+    - - name: step2
+        template: step2
+        arguments:
+          parameters:
+          - name: id
+            value: "{{inputs.parameters.id}}"
+      - name: step3
+        template: step3
+        arguments:
+          parameters:
+          - name: id
+            value: "{{inputs.parameters.id}}"
+
+  - name: step1
+    inputs:
+      parameters:
+      - name: id
     container:
       image: alpine:latest
       command: [sh, -c, sleep 10]
+  - name: step2
+    inputs:
+      parameters:
+      - name: id
+    container:
+      image: alpine:latest
+      command: [sh, -c, sleep 10]
+  - name: step3
+    inputs:
+      parameters:
+      - name: id
+    container:
+      image: alpine:latest
+      command: [sh, -c, sleep 10]
+  - name: step4
+    container:
+      image: alpine:latest
+      command: [sh, -c, sleep 10]
+  - name: step5
+    container:
+      image: alpine:latest
+      command: [sh, -c, sleep 10]
+  - name: step6
+    container:
+      image: alpine:latest
+      command: [sh, -c, sleep 10]
+
