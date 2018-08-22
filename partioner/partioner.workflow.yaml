@@ -8,17 +8,8 @@ spec:
   arguments:
     parameters:
     - name: seq-list
-      value:
-      - this
-      - workflow
-      - should
-      - take
-      - at
-      - least
-      - 60
-      - seconds
-      - to
-      - complete
+      value: |
+        ["a","b","c","d"]
   templates:
   - name: dynamic-input-workflow
     parallelism: 2
